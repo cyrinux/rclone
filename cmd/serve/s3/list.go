@@ -28,7 +28,10 @@ func (b *s3Backend) entryListR(_vfs *vfs.VFS, bucket, fdPath, name string, addPr
 
 		if entry.IsDir() {
 			if addPrefix {
-				response.AddPrefix(gofakes3.URLEncode(objectPath + "/"))
+				if !strings.HasSuffix(objectPath, "/") {
+					objectPath += "/"
+				}
+				response.AddPrefix(gofakes3.URLEncode(objectPath))
 				continue
 			}
 			err := b.entryListR(_vfs, bucket, path.Join(fdPath, object), "", false, response)
